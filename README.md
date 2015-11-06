@@ -1,12 +1,21 @@
 
 # DMAnaRun2
 
-# For CMSSW_7_4_12
+# For CMSSW_7_4_15
 ```
 setenv SCRAM_ARCH slc6_amd64_gcc491
-cmsrel CMSSW_7_4_12
-cd CMSSW_7_4_12/src/
+cmsrel CMSSW_7_4_15
+cd CMSSW_7_4_15/src/
 cmsenv
+```
+
+## For double-b-tagger
+```
+setenv CMSSW_GIT_REFERENCE /cvmfs/cms.cern.ch/cmssw.git.daily 
+git cms-init 
+git remote add btv-cmssw https://github.com/cms-btv-pog/cmssw.git 
+git fetch --tags btv-cmssw
+git cms-merge-topic cms-btv-pog:BoostedDoubleSVTaggerV2-WithWeightFiles-v1_from-CMSSW_7_4_15 
 ```
 
 ## For Egamma to get Spring15 ID
