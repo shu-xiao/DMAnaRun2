@@ -50,11 +50,11 @@ options.parseArguments()
 
 
 listEventsToSkip = []
-fileEventsToSkip = open(options.textfiletovetoEvents,"r")
+#fileEventsToSkip = open(options.textfiletovetoEvents,"r")
 
-for line in fileEventsToSkip:
-    cleanLine = line.rstrip()
-    listEventsToSkip.append(cleanLine+"-"+cleanLine)
+#for line in fileEventsToSkip:
+#    cleanLine = line.rstrip()
+#    listEventsToSkip.append(cleanLine+"-"+cleanLine)
 
 #print listEventsToSkip
 
@@ -100,7 +100,7 @@ process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
 process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10000)
+    input = cms.untracked.int32(-1)
 )
 
 ##___________________________HCAL_Noise_Filter________________________________||
@@ -125,7 +125,8 @@ process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(Fa
 process.source = cms.Source("PoolSource",
                             secondaryFileNames = cms.untracked.vstring(),
                             fileNames = cms.untracked.vstring(
-                'file:test.root'
+#                'file:test.root'
+        'file:/afs/cern.ch/work/s/syu/public/miniAOD/ZprimeToZhToZlephbb_narrow_M-2000_13TeV-madgraph_miniAODv2.root'
 		#'file:met_2015D_V4.root'
 		#'file:met_2015D_05Oct.root'
 		#'file:/afs/cern.ch/work/s/syu/public/miniAOD/ZprimeToZhToZlephbb_narrow_M-2000_13TeV-madgraph_25ns.root'
@@ -160,53 +161,18 @@ process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
 #process.pfMVAMEt.srcLeptons = cms.VInputTag("slimmedElectrons")
 process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
 process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+process.pfMVAMEt.inputFileNames = cms.PSet(
+        U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_4_X_MINIAOD_BX50_MET3p0_Aug2015.root'),
+        DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_MINIAOD_BX50_MET3p0_Aug2015.root'),
+        CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_MINIAOD_BX50_MET3p0_Aug2015.root'),
+        CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_MINIAOD_BX50_MET3p0_Aug2015.root')
+	)
 
 process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
 #process.puJetIdForPFMVAMEt.jets = cms.InputTag("ak4PFJets")
 process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
 process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
 
-## For 7.4.12, etaBinnedWeights is missing in RecoMET.METPUSubtraction.mvaPFMET_cff
-process.puJetIdForPFMVAMEt.algos = cms.VPSet(cms.PSet(
-		JetIdParams = cms.PSet(
-			Pt010_Loose = cms.vdouble(0.0, 0.0, 0.0, 0.2),
-			Pt010_Medium = cms.vdouble(0.2, 0.4, 0.2, 0.6),
-			Pt010_Tight = cms.vdouble(0.5, 0.6, 0.6, 0.9),
-			Pt1020_Loose = cms.vdouble(-0.4, -0.4, -0.4, 0.4),
-			Pt1020_Medium = cms.vdouble(-0.3, 0.0, 0.0, 0.5),
-			Pt1020_Tight = cms.vdouble(-0.2, 0.2, 0.2, 0.6),
-			Pt2030_Loose = cms.vdouble(0.0, 0.0, 0.2, 0.6),
-			Pt2030_Medium = cms.vdouble(0.2, 0.2, 0.5, 0.7),
-			Pt2030_Tight = cms.vdouble(0.3, 0.4, 0.7, 0.8),
-			Pt3050_Loose = cms.vdouble(0.0, 0.0, 0.6, 0.2),
-			Pt3050_Medium = cms.vdouble(0.3, 0.2, 0.7, 0.8),
-			Pt3050_Tight = cms.vdouble(0.5, 0.4, 0.8, 0.9)
-			),
-		etaBinnedWeights = cms.bool(False),
-		cutBased = cms.bool(False),
-		impactParTkThreshold = cms.double(0.0),
-		label = cms.string('full'),
-		tmvaMethod = cms.string('JetID'),
-		tmvaSpectators = cms.vstring(),
-		tmvaVariables = cms.vstring('nvtx', 
-					    'jetPt', 
-					    'jetEta', 
-					    'jetPhi', 
-					    'dZ', 
-					    'beta', 
-					    'betaStar', 
-					    'nCharged', 
-					    'nNeutrals', 
-					    'dR2Mean', 
-					    'ptD', 
-					    'frac01', 
-					    'frac02', 
-					    'frac03', 
-					    'frac04', 
-					    'frac05'),
-		tmvaWeights = cms.string('RecoJets/JetProducers/data/TMVAClassificationCategory_JetID_MET_53X_Dec2012.weights.xml.gz'),
-		version = cms.int32(-1)
-		))
 
 ## MVA MET Ends Here 
 ##
@@ -958,4 +924,4 @@ process.analysis = cms.Path(
     )
 
 
-#print process.dumpPython()
+print process.dumpPython()
