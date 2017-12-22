@@ -93,9 +93,10 @@ class genInfoTree : public baseTree{
   fastjet::contrib::Nsubjettiness *fjtau3=0;
   /* For substructure: ends here    */
 
-  float ptHat_;      // added by Eiko
-  float mcWeight_;   // added by Eiko
-  float HT_;       // added by Eiko
+  float ptHat_;       // added by Eiko
+  float mcWeight_;    // added by Eiko
+  float HT_;          // added by Eiko
+  float lheMET_;      // added by Eiko
   float genMET_true_; // added by Eiko
   float genMET_calo_;  // added by Eiko
   float genMET_caloNonPrompt_; // added by Eiko
@@ -103,6 +104,11 @@ class genInfoTree : public baseTree{
   std::vector<float>       pdf_;
   float                    originalLHEweight_;
   std::vector<float>       pdfscaleSysWeights_;
+
+  int nLHEPar_;
+  TClonesArray       *lheParP4_;
+  std::vector<int>   lheParId_;
+  std::vector<int>   lheParSt_;
 
   int nGenPar_;
   TClonesArray       *genParP4_;

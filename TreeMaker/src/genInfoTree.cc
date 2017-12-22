@@ -15,6 +15,7 @@ genInfoTree::genInfoTree(std::string name, TTree* tree, const edm::ParameterSet&
   saveGenJets_(iConfig.getParameter<bool>("saveGenJets")),
   saveGenJetSub_(iConfig.getParameter<bool>("saveGenJetSub"))
 {
+  lheParP4_ =   new TClonesArray("TLorentzVector");
   genParP4_ =   new TClonesArray("TLorentzVector");
   ak4GenJetP4_ =   new TClonesArray("TLorentzVector");
   ak8GenJetP4_ =   new TClonesArray("TLorentzVector");
@@ -46,6 +47,7 @@ genInfoTree::genInfoTree(std::string name, TTree* tree, const edm::ParameterSet&
 
 genInfoTree::~genInfoTree()
 {
+  delete lheParP4_;
   delete genParP4_;
   delete ak4GenJetP4_;
   delete ak8GenJetP4_;
@@ -140,6 +142,8 @@ genInfoTree::Fill(const edm::Event& iEvent)
 
 
     HT_=0;
+    lheMET_=0;
+    double lheMETx=0, lheMETy=0;
     const lhef::HEPEUP hepeup_ = evt->hepeup();
 
     const int nup_ = hepeup_.NUP; 
@@ -149,17 +153,34 @@ genInfoTree::Fill(const edm::Event& iEvent)
 
     for ( unsigned int icount = 0 ; icount < (unsigned int)nup_; icount++ ) {
 
+      nLHEPar_++;
+
+      TLorentzVector p4(
+			(pup_[icount])[0],
+			(pup_[icount])[1],
+			(pup_[icount])[2],
+			(pup_[icount])[3]
+			);
+      new( (*lheParP4_)[nLHEPar_-1]) TLorentzVector(p4);
+
       int PID    = idup_[icount];
       int status = istup_[icount];
       double px = (pup_[icount])[0];
       double py = (pup_[icount])[1];
+
+      lheParId_.push_back(PID);
+      lheParSt_.push_back(status);
             
       if(status!=1)continue;
+      if(abs(PID)==18) lheMETx += px;
+      if(abs(PID)==18) lheMETy += py;
       // if it's not a gluon or quark
       if(!(abs(PID)==21 || (abs(PID)<6 && abs(PID)>0)))continue;
       HT_ += sqrt(px*px+py*py);
     
     } // end of loop over particles
+
+    lheMET_ = sqrt(lheMETx*lheMETx + lheMETy*lheMETy);
   } // if LHEEventInfo is found
 
 
@@ -206,7 +227,7 @@ genInfoTree::Fill(const edm::Event& iEvent)
     std::vector<reco::GenParticle>::const_iterator geni = myParticles[genIndex];
     nGenPar_++;
 
-   TLorentzVector p4(geni->px(),geni->py(),geni->pz(),geni->energy());
+    TLorentzVector p4(geni->px(),geni->py(),geni->pz(),geni->energy());
     new( (*genParP4_)[nGenPar_-1]) TLorentzVector(p4);
 
     genParQ_.push_back(geni->charge());
@@ -375,10 +396,16 @@ genInfoTree::SetBranches(){
   AddBranch(&ptHat_, "ptHat");
   AddBranch(&mcWeight_, "mcWeight");
 
+  AddBranch(&lheMET_, "lheMET");
   AddBranch(&HT_, "HT");
   AddBranch(&pdf_, "pdf");
   AddBranch(&originalLHEweight_, "originalLHEweight");
   AddBranch(&pdfscaleSysWeights_, "pdfscaleSysWeights");
+
+  AddBranch(&nLHEPar_, "nLHEPar");
+  AddBranch(&lheParP4_,"lheParP4");
+  AddBranch(&lheParId_,"lheParId");
+  AddBranch(&lheParSt_,"lheParSt");
 
   AddBranch(&nGenPar_, "nGenPar");
   AddBranch(&genParP4_, "genParP4");
@@ -423,6 +450,7 @@ genInfoTree::Clear(){
   ptHat_                = DUMMY;
   mcWeight_             = DUMMY; 
   HT_                   = DUMMY;
+  lheMET_               = DUMMY;
   genMET_true_          = DUMMY;
   genMET_calo_          = DUMMY;  
   genMET_caloNonPrompt_ = DUMMY; 
@@ -430,6 +458,13 @@ genInfoTree::Clear(){
   pdf_.clear();
   originalLHEweight_ = 1;
   pdfscaleSysWeights_.clear();
+
+  nLHEPar_ =0;
+  lheParP4_->Clear();
+  lheParId_.clear();
+  lheParSt_.clear();
+
+
   nGenPar_ =0;
   genParP4_->Clear();
 

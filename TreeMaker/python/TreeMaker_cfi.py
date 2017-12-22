@@ -37,6 +37,7 @@ tree = cms.EDAnalyzer(
     filterLabel      = cms.InputTag("TriggerResults::PAT"),
 
     genPartLabel         = cms.InputTag("prunedGenParticles"),
+    LHESourceLabel       = cms.InputTag("source"),
     ak4GenJetLabel       = cms.InputTag("slimmedGenJets"),
     ak8GenJetLabel       = cms.InputTag("slimmedGenJetsAK8"),
     maxNumGenPar         =  cms.uint32(30),
