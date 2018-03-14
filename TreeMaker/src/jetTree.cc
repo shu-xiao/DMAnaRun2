@@ -70,11 +70,14 @@ jetTree::jetTree(std::string desc, TTree* tree, const edm::ParameterSet& iConfig
   std::cout << desc << std::endl;
   
   
-  genjetP4_    = new TClonesArray("TLorentzVector");
-  jetP4_       = new TClonesArray("TLorentzVector");
-  unCorrJetP4_ = new TClonesArray("TLorentzVector");
-  jetPuppiP4_  = new TClonesArray("TLorentzVector");
+  genjetP4_         = new TClonesArray("TLorentzVector");
+  jetP4_            = new TClonesArray("TLorentzVector");
+  unCorrJetP4_      = new TClonesArray("TLorentzVector");
+  jetPuppiP4_       = new TClonesArray("TLorentzVector");
   jetPuppiSDRawP4_  = new TClonesArray("TLorentzVector");
+  
+  jetLeadTrackP4_   = new TClonesArray("TLorentzVector");
+  jetLepTrackP4_    = new TClonesArray("TLorentzVector");
 
   SetBranches();
 
@@ -162,6 +165,8 @@ jetTree::~jetTree(){
   delete unCorrJetP4_;
   delete jetPuppiP4_;
   delete jetPuppiSDRawP4_;
+  delete jetLeadTrackP4_;
+  delete jetLepTrackP4_;
   
   /* EFC: starts here */
   delete areaDef;
@@ -307,6 +312,7 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
 						  uncorrJet.energy()
    							);
    
+    jetMt_.push_back(jet->mt());
     jetArea_.push_back(jet->jetArea());
   
     // if reading text files, set jet 4-momentum
@@ -370,22 +376,87 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
     jetPassIDTight_.push_back(passOrNotT);
 
 
-    if(isTHINJet_){
+    if(isTHINJet_ ){
+      // for PU ID
       float jpumva=0.;
       jpumva= jet->userFloat("pileupJetId:fullDiscriminant");
       //std::cout<<" jpumva = "<<jpumva<<std::endl;
       PUJetID_.push_back(jpumva);
-          
-      // float jpt = jet->pt();
-      // float jeta = jet->eta();
-
+      
       isPUJetIDLoose_.push_back(
 				bool(jet->userInt("pileupJetId:fullId") & (1 << 2)));
       isPUJetIDMedium_.push_back(
 				 bool(jet->userInt("pileupJetId:fullId") & (1 << 1)));
       isPUJetIDTight_.push_back(
 				bool(jet->userInt("pileupJetId:fullId") & (1 << 0)));
-    }
+     
+
+      // for regression
+
+      //Searching for leading track and lepton
+      int   leadTrkPID = DUMMY;
+      float leadTrkPt  = DUMMY;
+      float leadTrkEta = DUMMY;
+      float leadTrkPhi = DUMMY;
+      float leadTrkE   = DUMMY;
+      int   lepTrkPID  = DUMMY;
+      float lepTrkPt   = DUMMY;
+      float lepTrkEta  = DUMMY;
+      float lepTrkPhi  = DUMMY;
+      float lepTrkE    = DUMMY;
+
+      for (unsigned id = 0; id < jet->getJetConstituents().size(); id++) {
+
+	const edm::Ptr<reco::Candidate> daughter = jet->getJetConstituents().at(id);
+
+	if (daughter.isNonnull() && daughter.isAvailable()) {
+	  if (daughter->charge() != 0 && daughter->pt() > leadTrkPt) {
+	    leadTrkPID = daughter->pdgId();
+	    leadTrkPt  = daughter->pt();
+	    leadTrkEta = daughter->eta();
+	    leadTrkPhi = daughter->phi();
+	    leadTrkE   = daughter->energy();
+	  }
+
+	  if (abs(daughter->pdgId()) == 11 || abs(daughter->pdgId()) == 13 ) {
+	    if (daughter->pt() > lepTrkPt) {
+	      lepTrkPID = daughter->pdgId();
+	      lepTrkPt  = daughter->pt();
+	      lepTrkEta = daughter->eta();
+	      lepTrkPhi = daughter->phi();
+	      lepTrkE   = daughter->energy();
+	    }
+
+	  } // if it's an electron or a muon
+	} // if a daughter is available
+      } // end of loop over jet constituents
+
+
+      jetLeadTrackPID_.push_back(leadTrkPID);
+      TLorentzVector temp_l4(0,0,0,0);
+      temp_l4.SetPtEtaPhiE(leadTrkPt,
+			   leadTrkEta,
+			   leadTrkPhi,
+			   leadTrkE);
+
+      new( (*jetLeadTrackP4_)[nJet_-1]) TLorentzVector(temp_l4);
+
+      jetLepTrackPID_ .push_back(lepTrkPID);
+      TLorentzVector temp2_l4(0,0,0,0);
+      temp2_l4.SetPtEtaPhiE(lepTrkPt,
+			    lepTrkEta,
+			    lepTrkPhi,
+			    lepTrkE);
+      new( (*jetLepTrackP4_)[nJet_-1]) TLorentzVector(temp2_l4);
+
+      jetVtxPt_.push_back(sqrt(pow(jet->userFloat("vtxPx"),2)+pow(jet->userFloat("vtxPy"),2)));
+      jetVtxMass_.push_back(jet->userFloat("vtxMass"));
+      jetVtxNtrks_.push_back(jet->userFloat("vtxNtracks"));
+      jetVtx3DVal_.push_back(jet->userFloat("vtx3DVal"));
+      jetVtx3DSig_.push_back(jet->userFloat("vtx3DSig"));
+
+      
+    } // if this is a AK4CHS jet
         
     jetCEmEF_.push_back(jet->chargedEmEnergyFraction());
     jetCHadEF_.push_back(jet->chargedHadronEnergyFraction());
@@ -932,7 +1003,7 @@ void
 jetTree::SetBranches(){
   
   AddBranch(&nJet_,   "nJet");
-  AddBranch(&jetP4_,       "jetP4");
+  AddBranch(&jetP4_,  "jetP4");
 
   if(!isADDJet_){
   AddBranch(&jetRho_, "jetRho");
@@ -948,6 +1019,7 @@ jetTree::SetBranches(){
   AddBranch(&jetRawFactor_, "jetRawFactor");
   AddBranch(&unCorrJetP4_, "unCorrJetP4");
 
+  AddBranch(&jetMt_,          "jetMt");
   AddBranch(&jetArea_,        "jetArea");
   AddBranch(&jetCorrUncUp_,   "jetCorrUncUp");
   AddBranch(&jetCorrUncDown_, "jetCorrUncDown");
@@ -983,10 +1055,22 @@ jetTree::SetBranches(){
   }
 
   if(isTHINJet_){
+
     AddBranch(&PUJetID_,   "PUJetID");
     AddBranch(&isPUJetIDLoose_,  "isPUJetIDLoose");
     AddBranch(&isPUJetIDMedium_, "isPUJetIDMedium");
     AddBranch(&isPUJetIDTight_,  "isPUJetIDTight");
+    AddBranch(&jetLeadTrackPID_,"jetLeadTrackPID");
+    AddBranch(&jetLeadTrackP4_, "jetLeadTrackP4");
+    AddBranch(&jetLepTrackPID_, "jetLepTrackPID");
+    AddBranch(&jetLepTrackP4_,  "jetLepTrackP4");
+
+    AddBranch(&jetVtxPt_,   "jetVtxPt");
+    AddBranch(&jetVtxMass_, "jetVtxMass");
+    AddBranch(&jetVtxNtrks_,"jetVtxNtrks");
+    AddBranch(&jetVtx3DVal_,"jetVtx3DVal");
+    AddBranch(&jetVtx3DSig_,"jetVtx3DSig");
+
   }
 
   if(isFATJet_ || isAK8PuppiJet_ || isCA15PuppiJet_){
@@ -1079,6 +1163,7 @@ jetTree::Clear(){
   jetP4_->Clear();  
   unCorrJetP4_->Clear();
 
+  jetMt_.clear();
   jetArea_.clear();
   jetCorrUncUp_.clear();
   jetCorrUncDown_.clear();
@@ -1119,6 +1204,18 @@ jetTree::Clear(){
   jetNHadMulplicity_.clear();
   jetHFHadMultiplicity_.clear();
   jetHFEMMultiplicity_.clear();
+
+  //ak4jet only for regression
+  jetLeadTrackPID_.clear();
+  jetLeadTrackP4_->Clear();
+  jetLepTrackPID_.clear();
+  jetLepTrackP4_->Clear();
+
+  jetVtxPt_.clear();
+  jetVtxMass_.clear();
+  jetVtx3DVal_.clear();
+  jetVtxNtrks_.clear();
+  jetVtx3DSig_.clear();
 
 
   // btag information

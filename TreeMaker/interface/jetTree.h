@@ -142,6 +142,7 @@ class jetTree  : public baseTree{
   TClonesArray *jetP4_;
   TClonesArray *unCorrJetP4_;
 
+  std::vector<float> jetMt_;
   std::vector<float> jetArea_;
   std::vector<float> jetCorrUncUp_;
   std::vector<float> jetCorrUncDown_;
@@ -183,6 +184,19 @@ class jetTree  : public baseTree{
   std::vector<int>   jetHFHadMultiplicity_;
   std::vector<int>   jetHFEMMultiplicity_;
 
+
+  //ak4jet only for regression
+
+  std::vector<int>   jetLeadTrackPID_;
+  TClonesArray*      jetLeadTrackP4_;
+  std::vector<int>   jetLepTrackPID_;
+  TClonesArray*      jetLepTrackP4_;
+
+  std::vector<float> jetVtxPt_;
+  std::vector<float> jetVtxMass_;
+  std::vector<float> jetVtx3DVal_;
+  std::vector<float> jetVtxNtrks_;
+  std::vector<float> jetVtx3DSig_;
 
   // btag information
   std::vector<float> jetSSV_;
