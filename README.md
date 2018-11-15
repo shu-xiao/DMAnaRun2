@@ -96,17 +96,17 @@ cp -p DelPanj/miniIso_effectiveArea/*txt .
 
 mkdir jec
 cd jec
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016V3_MC.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016BCDV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016EFV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016GV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016HV3_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016V4_MC.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016BCDV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016EFV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016GV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016HV4_DATA.tar.gz
 
-tar xvzf Summer16_23Sep2016V3_MC.tar.gz
-tar xvzf Summer16_23Sep2016BCDV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016EFV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016GV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016HV3_DATA.tar.gz
+tar xvzf Summer16_23Sep2016V4_MC.tar.gz
+tar xvzf Summer16_23Sep2016BCDV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016EFV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016GV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016HV4_DATA.tar.gz
 
 cd -
 mv jec/*PFchs.txt .
@@ -130,8 +130,8 @@ cp -p ../miniIso_effectiveArea/*txt .
 
 mkdir jec
 cd jec
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016V3_MC.tar.gz
-tar xvzf Summer16_23Sep2016V3_MC.tar.gz
+wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016V4_MC.tar.gz
+tar xvzf Summer16_23Sep2016V4_MC.tar.gz
 
 cd -
 mv jec/*PFchs.txt .
@@ -162,15 +162,15 @@ cp -p ../miniIso_effectiveArea/*txt .
 
 mkdir jec
 cd jec
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016BCDV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016EFV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016GV3_DATA.tar.gz
-wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016HV3_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016BCDV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016EFV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016GV4_DATA.tar.gz
+wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016HV4_DATA.tar.gz
 
-tar xvzf Summer16_23Sep2016BCDV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016EFV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016GV3_DATA.tar.gz
-tar xvzf Summer16_23Sep2016HV3_DATA.tar.gz
+tar xvzf Summer16_23Sep2016BCDV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016EFV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016GV4_DATA.tar.gz
+tar xvzf Summer16_23Sep2016HV4_DATA.tar.gz
 
 cd -
 mv jec/*PFchs.txt .
