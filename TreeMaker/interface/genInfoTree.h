@@ -112,6 +112,7 @@ class genInfoTree : public baseTree{
 
   int nGenPar_;
   TClonesArray       *genParP4_;
+  TClonesArray       *genParVtx_;
   std::vector<int>   genParQ_;
   std::vector<int>   genParId_;
   std::vector<int>   genParSt_;

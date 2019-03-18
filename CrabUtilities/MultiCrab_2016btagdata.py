@@ -9,14 +9,14 @@ fout = open("datasetdetails_Summer16.txt","w")
 ## And number of files canbe used as number of lumis in that case. 
 
 
-fout.write("BTagCSV-Run2016H-03Feb2017_ver3-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016H-03Feb2017_ver3-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016H-03Feb2017_ver2-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016H-03Feb2017_ver2-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016G-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016G-03Feb2017-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016F-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016F-03Feb2017-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016E-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016E-03Feb2017-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016D-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016D-03Feb2017-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016C-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016C-03Feb2017-v1/MINIAOD 20 \n")
-fout.write("BTagCSV-Run2016B-03Feb2017_ver2-v2 treeMaker_Summer16_cfg.py /BTagCSV/Run2016B-03Feb2017_ver2-v2/MINIAOD 20 \n")
+#fout.write("BTagCSV-Run2016H-03Feb2017_ver3-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016H-03Feb2017_ver3-v1/MINIAOD 20 \n")
+#fout.write("BTagCSV-Run2016H-03Feb2017_ver2-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016H-03Feb2017_ver2-v1/MINIAOD 20 \n")
+#fout.write("BTagCSV-Run2016G-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016G-03Feb2017-v1/MINIAOD 15 \n")
+#fout.write("BTagCSV-Run2016F-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016F-03Feb2017-v1/MINIAOD 20 \n")
+fout.write("BTagCSV-Run2016E-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016E-03Feb2017-v1/MINIAOD 15 \n")
+#fout.write("BTagCSV-Run2016D-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016D-03Feb2017-v1/MINIAOD 20 \n")
+#fout.write("BTagCSV-Run2016C-03Feb2017-v1 treeMaker_Summer16_cfg.py /BTagCSV/Run2016C-03Feb2017-v1/MINIAOD 20 \n")
+#fout.write("BTagCSV-Run2016B-03Feb2017_ver2-v2 treeMaker_Summer16_cfg.py /BTagCSV/Run2016B-03Feb2017_ver2-v2/MINIAOD 20 \n")
 
 
 fout.close()

@@ -2,6 +2,7 @@
 #include <bitset>
 #include "DataFormats/HepMCCandidate/interface/GenStatusFlags.h"
 #include "TLorentzVector.h"
+#include "TVector3.h"
 const double DUMMY=-99999.;
 
 
@@ -17,6 +18,7 @@ genInfoTree::genInfoTree(std::string name, TTree* tree, const edm::ParameterSet&
 {
   lheParP4_ =   new TClonesArray("TLorentzVector");
   genParP4_ =   new TClonesArray("TLorentzVector");
+  genParVtx_ =  new TClonesArray("TVector3");
   ak4GenJetP4_ =   new TClonesArray("TLorentzVector");
   ak8GenJetP4_ =   new TClonesArray("TLorentzVector");
   
@@ -49,6 +51,7 @@ genInfoTree::~genInfoTree()
 {
   delete lheParP4_;
   delete genParP4_;
+  delete genParVtx_;
   delete ak4GenJetP4_;
   delete ak8GenJetP4_;
 
@@ -230,6 +233,9 @@ genInfoTree::Fill(const edm::Event& iEvent)
     TLorentzVector p4(geni->px(),geni->py(),geni->pz(),geni->energy());
     new( (*genParP4_)[nGenPar_-1]) TLorentzVector(p4);
 
+    TVector3 vtx(geni->vx(),geni->vy(),geni->vz());
+    new( (*genParVtx_)[nGenPar_-1]) TVector3(vtx);
+
     genParQ_.push_back(geni->charge());
     genParId_.push_back(geni->pdgId());
     genParSt_.push_back(geni->status());
@@ -409,6 +415,7 @@ genInfoTree::SetBranches(){
 
   AddBranch(&nGenPar_, "nGenPar");
   AddBranch(&genParP4_, "genParP4");
+  AddBranch(&genParVtx_, "genParVtx");
   AddBranch(&genParQ_,"genParQ");
   AddBranch(&genParId_,"genParId");
   AddBranch(&genParSt_,"genParSt");
@@ -467,6 +474,7 @@ genInfoTree::Clear(){
 
   nGenPar_ =0;
   genParP4_->Clear();
+  genParVtx_->Clear();
 
   genParQ_.clear();
   genParId_.clear();
